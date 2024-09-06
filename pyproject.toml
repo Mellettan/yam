@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "yam"
+version = "0.1.0"
+description = ""
+authors = ["Mellettan <roma23470@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.1.1"
+loguru = "^0.7.2"
+yandex-music = "^2.2.0"
+python-dotenv = "^1.0.1"
+dj-database-url = "^2.2.0"
+psycopg2-binary = "^2.9.9"
+django-crontab = "^0.7.1"
+matplotlib = "^3.9.2"
+pillow = "^10.4.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

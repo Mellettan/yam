@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ru">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'chart/css/chart.css' %}">
+    <title>Чарт на дату</title>
+</head>
+<body>
+    <h1>Чарт на {{ selected_date.date }}</h1>
+
+    <!-- Форма для выбора даты -->
+    <form method="get" action="">
+        <label for="date">Выберите дату:</label>
+        <input type="date" id="date" name="date" value="{{ selected_date.date }}">
+        <input type="submit" value="Показать чарт">
+    </form>
+
+    <!-- Форма для выбора трека -->
+    <form method="get" action="">
+        <label for="track">Выберите трек:</label>
+        <input type="text" id="track" name="track" value="{{ track_name }}">
+        <input type="submit" value="Показать трек">
+    </form>
+
+    <!-- Вывод списка треков (чарт) -->
+    {% if chart_entries %}
+        <h1>Чарт на {{ selected_date.date }}</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Позиция</th>
+                    <th>Трек</th>
+                    <th>Артисты</th>
+                    <th>ID Трека</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in chart_entries %}
+                    <tr>
+                        <td>{{ entry.position }}</td>
+                        <td>{{ entry.name }}</td>
+                        <td>{{ entry.artists|join:", " }}</td>
+                        <td>{{ entry.track_id }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Нет данных для выбранной даты.</p>
+    {% endif %}
+
+    <!-- Вывод списка треков -->
+    {% if track_entries %}
+        <h1>Все записи для трека "{{ track_name }}"</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Позиция</th>
+                    <th>Трек</th>
+                    <th>Артисты</th>
+                    <th>ID Трека</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in track_entries %}
+                    <tr>
+                        <td>{{ entry.timestamp|date:"j F, G:i" }}</td>
+                        <td>{{ entry.position }}</td>
+                        <td>{{ entry.name }}</td>
+                        <td>{{ entry.artists|join:", " }}</td>
+                        <td>{{ entry.track_id }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Нет данных для трека "{{ track_name }}".</p>
+    {% endif %}
+{% if chart_base64 %}
+    <h1>График позиции трека "{{ track_name }}"</h1> <br>
+    <div class="chart_img_wrapper">
+        <img class="chart_img" src="data:image/png;base64,{{ chart_base64 }}" alt="Chart for {{ track_name }}">
+    </div>
+{% endif %}
+
+</body>
+</html>
