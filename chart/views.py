@@ -46,7 +46,7 @@ def chart_view(request) -> HttpResponse:
 
     chart_base64 = None
     if track_entries:
-	    # Создание графика с Matplotlib
+        # Создание графика с Matplotlib
         dates = [entry.timestamp.date() for entry in track_entries]
         positions = [entry.position for entry in track_entries]
 
@@ -58,19 +58,21 @@ def chart_view(request) -> HttpResponse:
             marker='o', linestyle='-', color='royalblue', markersize=2)
 
         plt.gca().invert_yaxis()  # Инвертируем ось Y, чтобы первая позиция была вверху
-        plt.ylim(0, 100)  # Фиксируем диапазон оси Y от 0 до 100
+        plt.ylim(100, 0)  # Фиксируем диапазон оси Y от 100 до 0
 
         plt.gca().xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
         plt.gca().xaxis.set_major_locator(mdates.DayLocator())
         plt.gcf().autofmt_xdate()
 
         # Добавляем сетку и настройку осей
-        plt.grid(visible=True, linestyle='--', linewidth=0.7, alpha=0.5)  # Прозрачная сетка с пунктирной линией
+        plt.grid(visible=True, linestyle='--', linewidth=0.7,
+                 alpha=0.5)  # Прозрачная сетка с пунктирной линией
         plt.xticks(fontsize=10)
         plt.yticks(range(0, 101, 10), fontsize=10)  # Метки оси Y с шагом 10
 
         # Настройка заголовков и подписей
-        plt.title(f'Chart positions for {track_correct_name}', fontsize=14, color='green')
+        plt.title(f'Chart positions for {track_correct_name}', fontsize=14,
+                  color='green')
         plt.xlabel('Date', fontsize=12)
         plt.ylabel('Position', fontsize=12)
 
@@ -92,4 +94,3 @@ def chart_view(request) -> HttpResponse:
         'track_entries': track_entries,
         'chart_base64': chart_base64  # Передача base64 строки изображения в шаблон
     })
-
