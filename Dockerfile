@@ -23,5 +23,5 @@ RUN poetry install --no-root
 # Копируем исходный код
 COPY . /app/
 
-# Выполняем миграции, создаем ботов, добавляем CRON задачи и запускаем приложение
+# Выполняем миграции, добавляем CRON задачи и запускаем приложение
 CMD ["bash", "-c", "python manage.py migrate && cron && python manage.py crontab add && python manage.py runserver 0.0.0.0:8877"]
