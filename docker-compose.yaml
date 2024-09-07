@@ -4,9 +4,7 @@ services:
   web:
     build:
       dockerfile: ./Dockerfile
-    command: bash -c "python manage.py migrate && cron && python manage.py crontab add && python manage.py runserver 0.0.0.0:8877"
-    ports:
-      - "8877:8877"
+    command: bash -c "python manage.py migrate && cron && python manage.py crontab add && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     env_file:
@@ -26,6 +24,18 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data_yam:/var/lib/postgresql/data/
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8877:8877"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - .:/app
+    depends_on:
+      - web
+    networks:
+      - default
 
 volumes:
   postgres_data_yam:
