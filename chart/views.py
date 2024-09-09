@@ -18,8 +18,11 @@ client = Client(YANDEX_TOKEN).init()
 
 
 def chart_view(request) -> HttpResponse:
-    date_str = request.GET.get('date', datetime.now().strftime('%Y-%m-%d'))
+    date_str = request.GET.get('date', '')
+    if not date_str:
+        date_str = datetime.now().strftime('%Y-%m-%d')
     track = request.GET.get('track', None)
+    logger.info(f'Get params: date = {date_str}, track = {track}')
     track_id = None
     track_correct_name = None
 
@@ -42,7 +45,7 @@ def chart_view(request) -> HttpResponse:
         pk__in=Subquery(subquery)
     ).order_by('position')
 
-    track_entries = Chart.objects.filter(track_id=track_id) if track_id else None
+    track_entries = Chart.objects.filter(track_id=track_id).order_by('timestamp') if track_id else None
 
     chart_base64 = None
     if track_entries:
@@ -65,14 +68,12 @@ def chart_view(request) -> HttpResponse:
         plt.gcf().autofmt_xdate()
 
         # Добавляем сетку и настройку осей
-        plt.grid(visible=True, linestyle='--', linewidth=0.7,
-                 alpha=0.5)  # Прозрачная сетка с пунктирной линией
+        plt.grid(visible=True, linestyle='--', linewidth=0.7, alpha=0.5)  # Прозрачная сетка с пунктирной линией
         plt.xticks(fontsize=10)
         plt.yticks(range(0, 101, 10), fontsize=10)  # Метки оси Y с шагом 10
 
         # Настройка заголовков и подписей
-        plt.title(f'Chart positions for {track_correct_name}', fontsize=14,
-                  color='green')
+        plt.title(f'Chart positions for {track_correct_name}', fontsize=14, color='green')
         plt.xlabel('Date', fontsize=12)
         plt.ylabel('Position', fontsize=12)
 
